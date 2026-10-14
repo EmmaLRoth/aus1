@@ -1,0 +1,7 @@
+.cache
+build
+doc/html
+doc/semestral_project/*.pdf
+semestral_project/data/*.csv
+.idea
+cmake-build-debug

@@ -1,0 +1,68 @@
+@startuml is
+
+scale 2
+
+abstract class Sequence<MemoryBlock<DataType>>
+hide Sequence fields
+hide Sequence methods
+
+abstract class ImplicitAMS<DataType>
+hide ImplicitAMS fields
+hide ImplicitAMS methods
+
+class ImplicitSequence<DataType> {
+    + ImplicitSequence()
+    + ImplicitSequence(capacity: size_t, initBlocks: bool)
+    + ImplicitSequence(other: const ImplicitSequence&)
+    + ImplicitSequence(other: ImplicitSequence&&)
+    + calculateIndex(block: const BlockType&): size_t
+    + accessFirst(): BlockType* <<const>> <<override>
+    + accessLast(): BlockType* <<const>> <<override>
+    + access(index: size_t): BlockType* <<const>> <<override>
+    + accessNext(block: const BlockType&): BlockType* <<const>> <<override>
+    + accessPrevious(block: const BlockType&): BlockType* <<const>> <<override>
+    + emplaceFirst(): BlockType& <<override>>
+    + emplaceLast(): BlockType& <<override>>
+    + emplace(index: size_t): BlockType& <<override>>
+    + emplaceAfter(block: BlockType&): BlockType& <<override>>
+    + emplaceBefore(block: BlockType&): BlockType& <<override>>
+    + removeFirst(): void <<override>>
+    + removeLast(): void <<override>>
+    + remove(index: size_t): void <<override>>
+    + removeNext(block: BlockType&): void <<override>>
+    + removePrevious(block: BlockType&): void <<override>>
+    + assign(other: const AbstractMemoryType&): AbstractMemoryType& <<override>>
+    + equals(other: const AbstractMemoryType&): bool <<const>> <<override>>
+    + operator=(other: const ImplicitSequence&): ImplicitSequence&
+    + <<virtual>> indexOfNext(currentIndex: size_t): size_t
+    + <<virtual>> indexOfPrevious(currentIndex: size_t): size_t
+    + begin(): IteratorType <<const>>
+    + end(): IteratorType <<const>>
+}
+
+class ImplicitSequenceIterator<DataType> {
+    - m_block: MemoryBlock<DataType>*
+    + ImplicitSequenceIterator(block: MemoryBlock<DataType>*)
+    + operator++(): ImplicitSequenceIterator&
+    + operator++(int): ImplicitSequenceIterator
+    + operator==(other: const ImplicitSequenceIterator&): bool
+    + operator!=(other: const ImplicitSequenceIterator&): bool
+    + operator*(): DataType&
+    + operator*(): const DataType&
+}
+
+class CyclicImplicitSequence<DataType> {
+    + CyclicImplicitSequence()
+    + CyclicImplicitSequence(initSize: size_t, initBlocks: bool)
+    + indexOfNext(currentIndex: size_t): size_t
+    + indexOfPrevious(currentIndex: size_t): size_t
+    + assign(other: const AbstractMemoryType&): AbstractMemoryType&
+    + equals(other: const AbstractMemoryType&): bool
+}
+
+Sequence          <|-- ImplicitSequence
+ImplicitAMS       <|-- ImplicitSequence
+ImplicitSequence  <|-- CyclicImplicitSequence
+ImplicitSequence  +-- ImplicitSequenceIterator
+
+@enduml
